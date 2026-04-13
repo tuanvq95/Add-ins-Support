@@ -1,22 +1,24 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+VisualStudioVersion = 17.14.37111.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAddIn", "ExcelAddIn\ExcelAddIn.csproj", "{2D1E3A4B-5C6D-7E8F-9A0B-1C2D3E4F5A6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelAddIn", "ExcelAddIn.csproj", "{CC5809B7-D034-4EE6-BBFB-1D05601335A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|AnyCPU = Debug|AnyCPU
-		Release|AnyCPU = Release|AnyCPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2D1E3A4B-5C6D-7E8F-9A0B-1C2D3E4F5A6B}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{2D1E3A4B-5C6D-7E8F-9A0B-1C2D3E4F5A6B}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
-		{2D1E3A4B-5C6D-7E8F-9A0B-1C2D3E4F5A6B}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
-		{2D1E3A4B-5C6D-7E8F-9A0B-1C2D3E4F5A6B}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{CC5809B7-D034-4EE6-BBFB-1D05601335A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5809B7-D034-4EE6-BBFB-1D05601335A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5809B7-D034-4EE6-BBFB-1D05601335A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5809B7-D034-4EE6-BBFB-1D05601335A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7CE27306-67EB-49D0-87DB-639FB9B6D4B4}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\GitClone\\Add-ins-Support\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5809B7-D034-4EE6-BBFB-1D05601335A0}|ExcelAddIn.csproj|d:\\gitclone\\add-ins-support\\thisaddin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5809B7-D034-4EE6-BBFB-1D05601335A0}|ExcelAddIn.csproj|solutionrelative:thisaddin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5809B7-D034-4EE6-BBFB-1D05601335A0}|ExcelAddIn.csproj|d:\\gitclone\\add-ins-support\\ribbon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC5809B7-D034-4EE6-BBFB-1D05601335A0}|ExcelAddIn.csproj|solutionrelative:ribbon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC5809B7-D034-4EE6-BBFB-1D05601335A0}|ExcelAddIn.csproj|d:\\gitclone\\add-ins-support\\ribbon.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{CC5809B7-D034-4EE6-BBFB-1D05601335A0}|ExcelAddIn.csproj|solutionrelative:ribbon.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ThisAddIn.cs",
+              "DocumentMoniker": "D:\\GitClone\\Add-ins-Support\\ThisAddIn.cs",
+              "RelativeDocumentMoniker": "ThisAddIn.cs",
+              "ToolTip": "D:\\GitClone\\Add-ins-Support\\ThisAddIn.cs",
+              "RelativeToolTip": "ThisAddIn.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T13:37:13.688Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Ribbon.xml",
+              "DocumentMoniker": "D:\\GitClone\\Add-ins-Support\\Ribbon.xml",
+              "RelativeDocumentMoniker": "Ribbon.xml",
+              "ToolTip": "D:\\GitClone\\Add-ins-Support\\Ribbon.xml",
+              "RelativeToolTip": "Ribbon.xml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2026-04-13T13:37:02.303Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Ribbon.cs",
+              "DocumentMoniker": "D:\\GitClone\\Add-ins-Support\\Ribbon.cs",
+              "RelativeDocumentMoniker": "Ribbon.cs",
+              "ToolTip": "D:\\GitClone\\Add-ins-Support\\Ribbon.cs",
+              "RelativeToolTip": "Ribbon.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAACMAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T13:36:55.971Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
