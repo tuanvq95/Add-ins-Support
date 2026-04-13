@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
-namespace ExcelAddIn.Features
+namespace AddinsSupport.Features
 {
-  /// <summary>
-  /// Nhúng macro VBA vào workbook hiện tại.
-  /// Yêu cầu: Excel → File → Options → Trust Center → Trust Center Settings
-  ///          → Macro Settings → bật "Trust access to the VBA project object model".
-  /// </summary>
-  public static class VbaMacroManager
-  {
-    // ─── Danh sách macro sẵn có ───────────────────────────────────────────
+    /// <summary>
+    /// Nhúng macro VBA vào workbook hiện tại.
+    /// Yêu cầu: Excel → File → Options → Trust Center → Trust Center Settings
+    ///          → Macro Settings → bật "Trust access to the VBA project object model".
+    /// </summary>
+    public static class VbaMacroManager
+    {
+        // ─── Danh sách macro sẵn có ───────────────────────────────────────────
 
-    public static readonly IReadOnlyList<MacroDefinition> AvailableMacros = new List<MacroDefinition>
+        public static readonly IReadOnlyList<MacroDefinition> AvailableMacros = new List<MacroDefinition>
         {
             new MacroDefinition(
                 "AutoFitAllColumns",
@@ -171,124 +171,124 @@ End Sub"),
 End Sub")
         };
 
-    // ─── Public API ───────────────────────────────────────────────────────
+        // ─── Public API ───────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Hiển thị dialog chọn macro, sau đó nhúng các macro được chọn vào workbook.
-    /// </summary>
-    public static void ShowMacroSelector(Excel.Workbook wb)
-    {
-      if (wb == null) throw new ArgumentNullException("wb");
-
-      using (var form = new Forms.MacroSelectorForm())
-      {
-        if (form.ShowDialog() != DialogResult.OK) return;
-        InjectMacros(wb, form.SelectedMacros);
-      }
-    }
-
-    /// <summary>
-    /// Nhúng danh sách macro đã chọn vào VBA project của workbook.
-    /// </summary>
-    public static void InjectMacros(Excel.Workbook wb, IList<MacroDefinition> macros)
-    {
-      if (macros == null || macros.Count == 0) return;
-
-      // Kiểm tra quyền truy cập VBA Project Object Model
-      bool canAccess;
-      try
-      {
-        var _ = wb.VBProject;
-        canAccess = true;
-      }
-      catch (Exception)
-      {
-        canAccess = false;
-      }
-
-      if (!canAccess)
-      {
-        MessageBox.Show(
-            "Không thể truy cập VBA Project.\n\n" +
-            "Vui lòng bật: Excel → File → Options → Trust Center → Trust Center Settings\n" +
-            "→ Macro Settings → Tích chọn \"Trust access to the VBA project object model\".",
-            "Quyền Truy Cập VBA",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Warning);
-        return;
-      }
-
-      var vbaProject = wb.VBProject;
-      int injected = 0;
-
-      foreach (var macro in macros)
-      {
-        try
+        /// <summary>
+        /// Hiển thị dialog chọn macro, sau đó nhúng các macro được chọn vào workbook.
+        /// </summary>
+        public static void ShowMacroSelector(Excel.Workbook wb)
         {
-          // Tìm module tên "AddInSupport", tạo mới nếu chưa có
-          Microsoft.Vbe.Interop.VBComponent module = null;
-          foreach (Microsoft.Vbe.Interop.VBComponent comp in vbaProject.VBComponents)
-          {
-            if (comp.Name == "AddInSupport")
+            if (wb == null) throw new ArgumentNullException("wb");
+
+            using (var form = new Forms.MacroSelectorForm())
             {
-              module = comp;
-              break;
+                if (form.ShowDialog() != DialogResult.OK) return;
+                InjectMacros(wb, form.SelectedMacros);
             }
-          }
-
-          if (module == null)
-          {
-            module = vbaProject.VBComponents.Add(
-                Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_StdModule);
-            module.Name = "AddInSupport";
-          }
-
-          // Kiểm tra nếu macro đã tồn tại thì bỏ qua
-          string existingCode = module.CodeModule.Lines[1, module.CodeModule.CountOfLines];
-          if (existingCode.Contains("Sub " + macro.Name + "(")) continue;
-
-          // Thêm macro vào cuối module
-          int lineCount = module.CodeModule.CountOfLines;
-          module.CodeModule.InsertLines(lineCount + 1, Environment.NewLine + macro.Code);
-          injected++;
         }
-        catch (Exception ex)
+
+        /// <summary>
+        /// Nhúng danh sách macro đã chọn vào VBA project của workbook.
+        /// </summary>
+        public static void InjectMacros(Excel.Workbook wb, IList<MacroDefinition> macros)
         {
-          MessageBox.Show(
-              $"Lỗi khi nhúng macro '{macro.Name}': {ex.Message}",
-              "Lỗi",
-              MessageBoxButtons.OK,
-              MessageBoxIcon.Error);
+            if (macros == null || macros.Count == 0) return;
+
+            // Kiểm tra quyền truy cập VBA Project Object Model
+            bool canAccess;
+            try
+            {
+                var _ = wb.VBProject;
+                canAccess = true;
+            }
+            catch (Exception)
+            {
+                canAccess = false;
+            }
+
+            if (!canAccess)
+            {
+                MessageBox.Show(
+                    "Không thể truy cập VBA Project.\n\n" +
+                    "Vui lòng bật: Excel → File → Options → Trust Center → Trust Center Settings\n" +
+                    "→ Macro Settings → Tích chọn \"Trust access to the VBA project object model\".",
+                    "Quyền Truy Cập VBA",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            var vbaProject = wb.VBProject;
+            int injected = 0;
+
+            foreach (var macro in macros)
+            {
+                try
+                {
+                    // Tìm module tên "AddInSupport", tạo mới nếu chưa có
+                    Microsoft.Vbe.Interop.VBComponent module = null;
+                    foreach (Microsoft.Vbe.Interop.VBComponent comp in vbaProject.VBComponents)
+                    {
+                        if (comp.Name == "AddInSupport")
+                        {
+                            module = comp;
+                            break;
+                        }
+                    }
+
+                    if (module == null)
+                    {
+                        module = vbaProject.VBComponents.Add(
+                            Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_StdModule);
+                        module.Name = "AddInSupport";
+                    }
+
+                    // Kiểm tra nếu macro đã tồn tại thì bỏ qua
+                    string existingCode = module.CodeModule.Lines[1, module.CodeModule.CountOfLines];
+                    if (existingCode.Contains("Sub " + macro.Name + "(")) continue;
+
+                    // Thêm macro vào cuối module
+                    int lineCount = module.CodeModule.CountOfLines;
+                    module.CodeModule.InsertLines(lineCount + 1, Environment.NewLine + macro.Code);
+                    injected++;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Lỗi khi nhúng macro '{macro.Name}': {ex.Message}",
+                        "Lỗi",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+
+            if (injected > 0)
+            {
+                MessageBox.Show(
+                    $"Đã nhúng {injected} macro vào module 'AddInSupport'.\n" +
+                    "Nhấn Alt+F8 trong Excel để chạy macro.",
+                    "Nhúng Macro Thành Công",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
         }
-      }
-
-      if (injected > 0)
-      {
-        MessageBox.Show(
-            $"Đã nhúng {injected} macro vào module 'AddInSupport'.\n" +
-            "Nhấn Alt+F8 trong Excel để chạy macro.",
-            "Nhúng Macro Thành Công",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information);
-      }
     }
-  }
 
-  // ─── Data Class ───────────────────────────────────────────────────────────
+    // ─── Data Class ───────────────────────────────────────────────────────────
 
-  public sealed class MacroDefinition
-  {
-    public string Name { get; }
-    public string Description { get; }
-    public string Code { get; }
-
-    public MacroDefinition(string name, string description, string code)
+    public sealed class MacroDefinition
     {
-      Name = name;
-      Description = description;
-      Code = code;
-    }
+        public string Name { get; }
+        public string Description { get; }
+        public string Code { get; }
 
-    public override string ToString() => Description;
-  }
+        public MacroDefinition(string name, string description, string code)
+        {
+            Name = name;
+            Description = description;
+            Code = code;
+        }
+
+        public override string ToString() => Description;
+    }
 }

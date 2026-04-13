@@ -2,10 +2,15 @@ using System;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 
-namespace ExcelAddIn
+namespace AddinsSupport
 {
     public partial class ThisAddIn
     {
+        /// <summary>
+        /// Đăng ký Ribbon XML với Excel.
+        /// </summary>
+        protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject() => new MainRibbon(this.Application);
+
         private void ThisAddIn_Startup(object sender, EventArgs e)
         {
             // Theo dõi sự kiện thay đổi cell để tự động nhận diện URL
@@ -49,11 +54,12 @@ namespace ExcelAddIn
             }
         }
 
-        /// <summary>
-        /// Đăng ký Ribbon XML với Excel.
-        /// </summary>
-        protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject()
-     => new MainRibbon(this.Application);
-
+        #region VSTO generated code
+        private void InternalStartup()
+        {
+            this.Startup += new EventHandler(ThisAddIn_Startup);
+            this.Shutdown += new EventHandler(ThisAddIn_Shutdown);
+        }
+        #endregion
     }
 }

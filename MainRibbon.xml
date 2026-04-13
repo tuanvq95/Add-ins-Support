@@ -1,50 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
-  <ribbon>
-    <tabs>
-      <tab id="tabAddInSupport" label="Add-in Hỗ Trợ">
+		<ribbon>
+				<tabs>
+						<tab id="tabAddInSupport" label="Add-in Hỗ Trợ">
+								<!-- ── Nhóm Hyperlink ── -->
+								<group id="grpHyperlink" label="Hyperlink">
 
-        <!-- ── Nhóm Hyperlink ── -->
-        <group id="grpHyperlink" label="Hyperlink">
-          <button id="btnAutoHyperlink"
-                  label="Tự Động Hyperlink"
-                  imageMso="HyperlinkInsert"
-                  size="large"
-                  onAction="OnAutoHyperlink"
-                  screentip="Tự Động Thêm Hyperlink"
-                  supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
-        </group>
+										<toggleButton id="tglMode0"
+																	label="Mode 0"
+																	imageMso="HappyFace"
+																	onAction="OnToggleMode0"
+																	getPressed="GetMode0Pressed"/>
 
-        <!-- ── Nhóm Sheet ── -->
-        <group id="grpSheet" label="Tên Sheet">
-          <button id="btnRenameSheets"
-                  label="Đổi Tên Hàng Loạt"
-                  imageMso="TableRename"
-                  size="large"
-                  onAction="OnRenameSheets"
-                  screentip="Đổi Tên Sheet Hàng Loạt"
-                  supertip="Thêm tiền tố / hậu tố hoặc đánh số thứ tự cho tất cả sheet trong workbook." />
-          <button id="btnRenameByCell"
-                  label="Đổi Tên Theo Cell A1"
-                  imageMso="TableInsertColumnToTheRight"
-                  size="normal"
-                  onAction="OnRenameByCell"
-                  screentip="Đổi Tên Sheet Theo Nội Dung Cell A1"
-                  supertip="Tự động đặt tên mỗi sheet bằng nội dung của cell A1 trong sheet đó." />
-        </group>
+										<toggleButton id="tglMode1"
+																	label="Mode 1"
+																	imageMso="HappyFace"
+																	onAction="OnToggleMode1"
+																	getPressed="GetMode1Pressed"/>
+										
+										<button id="btnAutoHyperlink"
+														label="Tự Động Hyperlink"
+														imageMso="HyperlinkInsert"
+														size="large"
+														onAction="OnAutoHyperlink"
+														screentip="Tự Động Thêm Hyperlink"
+														supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
+								</group>
 
-        <!-- ── Nhóm VBA Macro ── -->
-        <group id="grpVba" label="VBA Macro">
-          <button id="btnInjectVba"
-                  label="Nhúng Macro VBA"
-                  imageMso="MacroPlay"
-                  size="large"
-                  onAction="OnInjectVba"
-                  screentip="Nhúng Macro VBA Vào Workbook"
-                  supertip="Chọn và nhúng các macro tiện ích (AutoFit, tô màu trùng lặp, xuất CSV, v.v.) vào workbook hiện tại." />
-        </group>
+								<!-- ── Nhóm Sheet ── --><!--
+								<group id="grpSheet" label="Tên Sheet">
+										<button id="btnRenameSheets"
+														label="Đổi Tên Hàng Loạt"
+														imageMso="TableRename"
+														size="large"
+														onAction="OnRenameSheets"
+														screentip="Đổi Tên Sheet Hàng Loạt"
+														supertip="Thêm tiền tố / hậu tố hoặc đánh số thứ tự cho tất cả sheet trong workbook." />
+										<button id="btnRenameByCell"
+														label="Đổi Tên Theo Cell A1"
+														imageMso="TableInsertColumnToTheRight"
+														size="normal"
+														onAction="OnRenameByCell"
+														screentip="Đổi Tên Sheet Theo Nội Dung Cell A1"
+														supertip="Tự động đặt tên mỗi sheet bằng nội dung của cell A1 trong sheet đó." />
+								</group>
 
-      </tab>
-    </tabs>
-  </ribbon>
+								--><!-- ── Nhóm VBA Macro ── --><!--
+								<group id="grpVba" label="VBA Macro">
+										<button id="btnInjectVba"
+														label="Nhúng Macro VBA"
+														imageMso="MacroPlay"
+														size="large"
+														onAction="OnInjectVba"
+														screentip="Nhúng Macro VBA Vào Workbook"
+														supertip="Chọn và nhúng các macro tiện ích (AutoFit, tô màu trùng lặp, xuất CSV, v.v.) vào workbook hiện tại." />
+								</group>-->
+								<group id="test" label="Hyperlink">
+										<button id="btntest"
+														label="Tự Động Hyperlink"
+														imageMso="HyperlinkInsert"
+														size="large"
+														onAction="OnAutoHyperlink"
+														screentip="Tự Động Thêm Hyperlink"
+														supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
+										
+								</group>
+						</tab>
+				</tabs>
+		</ribbon>
 </customUI>

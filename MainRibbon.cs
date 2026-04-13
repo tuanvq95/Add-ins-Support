@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 
-namespace ExcelAddIn
+namespace AddinsSupport
 {
     [ComVisible(true)]
     public class MainRibbon : Office.IRibbonExtensibility
@@ -14,6 +14,7 @@ namespace ExcelAddIn
 
         private Excel.Application _app;
 
+        private int _hyperlinkMode = 0;
 
         #region IRibbonExtensibility
 
@@ -22,10 +23,8 @@ namespace ExcelAddIn
             _app = app;
         }
 
-        public string GetCustomUI(string ribbonID)
-        {
-            return GetResourceText("ExcelAddIn.MainRibbon.xml");
-        }
+        public string GetCustomUI(string ribbonID) => GetResourceText("AddinsSupport.MainRibbon.xml");
+
 
         #endregion
 
@@ -37,6 +36,11 @@ namespace ExcelAddIn
         }
 
         // ── Hyperlink ──────────────────────────────────────────────────────────
+
+        public void OnHyperlinkModeChanged(Office.IRibbonControl control, string selectedId, int selectedIndex)
+        {
+            _hyperlinkMode = selectedIndex; // 0 hoặc 1
+        }
 
         /// <summary>Quét toàn bộ sheet hiện tại và tự động thêm hyperlink.</summary>
         public void OnAutoHyperlink(Office.IRibbonControl control)
