@@ -1,1 +1,0 @@
-D:\GitClone\Add-ins-Support\obj\Debug\ExcelAddIn.csproj.AssemblyReference.cache
