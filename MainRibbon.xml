@@ -1,71 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
-		<ribbon>
-				<tabs>
-						<tab id="tabAddInSupport" label="Add-in Hỗ Trợ">
-								<!-- ── Nhóm Hyperlink ── -->
-								<group id="grpHyperlink" label="Hyperlink">
+	<ribbon>
+		<tabs>
+			<tab id="tabAddInSupport" label="Add-in Hỗ Trợ">
 
-										<toggleButton id="tglMode0"
-																	label="Mode 0"
-																	imageMso="HappyFace"
-																	onAction="OnToggleMode0"
-																	getPressed="GetMode0Pressed"/>
+				<!-- ══════════════════════════════════════════════════
+				     NHÓM 1 — CHỈNH SỬA SHEET
+				     ══════════════════════════════════════════════════ -->
+				<group id="grpSheetEditing" label="Chỉnh Sửa Sheet">
 
-										<toggleButton id="tglMode1"
-																	label="Mode 1"
-																	imageMso="HappyFace"
-																	onAction="OnToggleMode1"
-																	getPressed="GetMode1Pressed"/>
-										
-										<button id="btnAutoHyperlink"
-														label="Tự Động Hyperlink"
-														imageMso="HyperlinkInsert"
-														size="large"
-														onAction="OnAutoHyperlink"
-														screentip="Tự Động Thêm Hyperlink"
-														supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
-								</group>
+					<!-- Mở dialog cài đặt: chọn màu nền, giới hạn cột xx-yy -->
+					<button id="btnColorSettings"
+						label="Cài Đặt"
+						imageMso="PropertySheet"
+						size="large"
+						onAction="OnColorSettings"
+						screentip="Cài Đặt Tô Màu"
+						supertip="Mở dialog cài đặt:&#13;• Chọn màu nền (ColorPicker)&#13;• Bật/tắt giới hạn cột và nhập cột từ-đến" />
 
-								<!-- ── Nhóm Sheet ── --><!--
-								<group id="grpSheet" label="Tên Sheet">
-										<button id="btnRenameSheets"
-														label="Đổi Tên Hàng Loạt"
-														imageMso="TableRename"
-														size="large"
-														onAction="OnRenameSheets"
-														screentip="Đổi Tên Sheet Hàng Loạt"
-														supertip="Thêm tiền tố / hậu tố hoặc đánh số thứ tự cho tất cả sheet trong workbook." />
-										<button id="btnRenameByCell"
-														label="Đổi Tên Theo Cell A1"
-														imageMso="TableInsertColumnToTheRight"
-														size="normal"
-														onAction="OnRenameByCell"
-														screentip="Đổi Tên Sheet Theo Nội Dung Cell A1"
-														supertip="Tự động đặt tên mỗi sheet bằng nội dung của cell A1 trong sheet đó." />
-								</group>
+					<!-- Tô màu nền cho toàn dòng (hoặc dải cột theo cài đặt) -->
+				<box id="boxColorSelection" boxStyle="horizontal ">
+					<button id="btnColorSelection"
+						label="Tô Màu"
+						imageMso="FontColorPicker"
+						size="large"
+						onAction="OnColorSelection"
+						screentip="Tô Màu Nền Theo Dòng"
+						supertip="Tô màu nền cho toàn bộ dòng của vùng đang chọn.&#13;• Chọn 1 ô → tô toàn dòng đó.&#13;• Chọn vùng → tô tất cả dòng trong vùng.&#13;• Màu và giới hạn cột theo cài đặt (nút bên trên)." />
+				</box>
 
-								--><!-- ── Nhóm VBA Macro ── --><!--
-								<group id="grpVba" label="VBA Macro">
-										<button id="btnInjectVba"
-														label="Nhúng Macro VBA"
-														imageMso="MacroPlay"
-														size="large"
-														onAction="OnInjectVba"
-														screentip="Nhúng Macro VBA Vào Workbook"
-														supertip="Chọn và nhúng các macro tiện ích (AutoFit, tô màu trùng lặp, xuất CSV, v.v.) vào workbook hiện tại." />
-								</group>-->
-								<group id="test" label="Hyperlink">
-										<button id="btntest"
-														label="Tự Động Hyperlink"
-														imageMso="HyperlinkInsert"
-														size="large"
-														onAction="OnAutoHyperlink"
-														screentip="Tự Động Thêm Hyperlink"
-														supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
-										
-								</group>
-						</tab>
-				</tabs>
-		</ribbon>
+					<!-- Tạo sheet mới sao chép định dạng từ sheet cuối -->
+					<button id="btnAddSheetWithFormat"
+						label="Thêm Sheet Mẫu"
+						imageMso="FileNew"
+						size="normal"
+						onAction="OnAddSheetWithFormat"
+						screentip="Thêm Sheet Theo Định Dạng Mẫu"
+						supertip="Tạo một sheet mới có định dạng và cấu trúc giống hệt sheet cuối cùng trong workbook. Nội dung sẽ được xóa, chỉ giữ định dạng." />
+
+					<!-- Căn chỉnh kích thước tất cả hình ảnh về size chuẩn -->
+					<button id="btnResizeImages"
+						label="Chuẩn Hóa Ảnh"
+						imageMso="PictureInsertFromFile"
+						size="normal"
+						onAction="OnResizeImages"
+						screentip="Điều Chỉnh Kích Thước Hình Ảnh Về Size Chuẩn"
+						supertip="Tự động căn chỉnh tất cả hình ảnh trong sheet hiện tại về kích thước chuẩn (120×80 px). Có thể tùy chỉnh trong code." />
+
+					<!-- Bỏ ẩn tất cả sheet đang bị ẩn -->
+					<button id="btnUnhideAllSheets"
+						label="Unhide Tất Cả"
+						imageMso="SheetInsert"
+						size="normal"
+						onAction="OnUnhideAllSheets"
+						screentip="Hiển Thị Lại Tất Cả Sheet Ẩn"
+						supertip="Tự động bỏ ẩn tất cả các sheet đang bị ẩn trong workbook hiện tại." />
+
+				</group>
+
+				<!-- ══════════════════════════════════════════════════
+				     NHÓM 2 — TỰ ĐỘNG THỰC THI
+				     ══════════════════════════════════════════════════ -->
+				<group id="grpAutomation" label="Tự Động Thực Thi">
+
+					<!--
+					    Dropdown chọn chế độ nhận diện Sheet ID.
+					    Danh sách mục được tạo ĐỘNG từ HyperlinkManager.IdFormats:
+					      • Thêm định dạng mới trong C# → dropdown tự cập nhật, không cần sửa XML.
+					-->
+					<labelControl id="lblSheetNameFormat"
+						label="Sheet Name Format" />
+					<dropDown id="ddHyperlinkMode"
+						showLabel="false"
+						screentip="Chọn Chế Độ Tạo Hyperlink"
+						supertip="Chọn chế độ xử lý:&#13;• SEQ.xxx  — ô chứa số → tìm sheet SEQ.{số} hoặc SEQ.{x}~{y}&#13;• SEQg.xxx — ô chứa STT con, cột A chứa nhóm → tìm SEQ{nhóm}.{STT}&#13;&#13;★ Thêm định dạng mới: kế thừa SheetIdFormat trong HyperlinkManager.cs"
+						getItemCount="GetHyperlinkModeCount"
+						getItemLabel="GetHyperlinkModeLabel"
+						getItemID="GetHyperlinkModeID"
+						onAction="OnHyperlinkModeChanged"
+						getSelectedItemIndex="GetHyperlinkModeIndex" />
+
+					<!-- Quét URL và tạo hyperlink tự động -->
+					<button id="btnAutoHyperlink"
+						label="Tạo Hyperlink"
+						imageMso="HyperlinkInsert"
+						size="large"
+						onAction="OnAutoHyperlink"
+						screentip="Tự Động Thêm Hyperlink"
+						supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
+
+					<!-- Shift tên SEQ từ vị trí active lên +1 -->
+					<button id="btnRenameByFormat"
+						label="Đổi Tên Sheet"
+						imageMso="FileSaveAs"
+						size="normal"
+						onAction="OnRenameByFormat"
+						screentip="Shift Tên Sheet SEQ Lên +1"
+						supertip="Shift tên tất cả sheet SEQ từ vị trí active trở đi lên +1, tạo khoảng trống để chèn sheet mới.&#13;Chế độ lấy từ dropdown Sheet ID Format:&#13;• SEQ.xxx  → shift toàn workbook&#13;• SEQg.xxx → shift chỉ trong nhóm" />
+
+					<!-- Kiểm tra và chỉnh lại thứ tự SEQ theo vị trí tab -->
+					<button id="btnCheckFixSeqOrder"
+						label="Kiểm Tra Tên Sheet"
+						imageMso="ReviewSyncScrolling"
+						size="normal"
+						onAction="OnCheckFixSeqOrder"
+						screentip="Kiểm Tra &amp; Chỉnh Thứ Tự SEQ"
+						supertip="Kiểm tra thứ tự đánh số SEQ theo vị trí tab. Nếu lệch → hỏi xác nhận rồi chỉnh lại tự động (bảo toàn độ rộng range).&#13;Chế độ lấy từ dropdown Sheet ID Format." />
+
+					<!-- Sắp xếp sheet theo alphabet và chuẩn hóa tên -->
+					<!--<button id="btnSortNormalizeSheets"
+						label="Sắp Xếp &amp; Chuẩn Hóa"
+						imageMso="SortAscendingAZ"
+						size="normal"
+						onAction="OnSortNormalizeSheets"
+						screentip="Sắp Xếp và Chuẩn Hóa Tên Sheet"
+						supertip="Tự động sắp xếp các sheet theo thứ tự bảng chữ cái (A→Z) và loại bỏ khoảng trắng thừa ở đầu/cuối tên sheet." />-->
+
+				</group>
+
+				<!-- ══════════════════════════════════════════════════
+				     NHÓM 3 — TIỆN ÍCH MỞ RỘNG (Đang Phát Triển)
+				     ══════════════════════════════════════════════════ -->
+				<!--<group id="grpExtensions" label="Tiện Ích Mở Rộng">
+
+					<button id="btnExtension1"
+						label="Tính Năng A"
+						imageMso="MacroPlay"
+						size="large"
+						onAction="OnExtensionComingSoon"
+						screentip="Đang Phát Triển"
+						supertip="Tính năng này đang được xây dựng. Vui lòng chờ phiên bản cập nhật tiếp theo." />
+
+					<separator id="sepExt" />
+
+					<button id="btnExtension2"
+						label="Tính Năng B"
+						imageMso="MacroRecord"
+						size="normal"
+						onAction="OnExtensionComingSoon"
+						screentip="Đang Phát Triển"
+						supertip="Tính năng này đang được xây dựng. Vui lòng chờ phiên bản cập nhật tiếp theo." />
+
+					<button id="btnExtension3"
+						label="Tính Năng C"
+						imageMso="MacroStop"
+						size="normal"
+						onAction="OnExtensionComingSoon"
+						screentip="Đang Phát Triển"
+						supertip="Tính năng này đang được xây dựng. Vui lòng chờ phiên bản cập nhật tiếp theo." />
+
+				</group>-->
+
+			</tab>
+		</tabs>
+	</ribbon>
 </customUI>

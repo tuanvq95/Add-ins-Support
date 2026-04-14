@@ -9,7 +9,7 @@ namespace AddinsSupport
         /// <summary>
         /// Đăng ký Ribbon XML với Excel.
         /// </summary>
-        protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject() => new MainRibbon(this.Application);
+        protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject() => new MainRibbon();
 
         private void ThisAddIn_Startup(object sender, EventArgs e)
         {
