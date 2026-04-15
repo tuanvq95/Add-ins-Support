@@ -115,7 +115,7 @@ namespace AddinsSupport.Features
         string newName = entry.End != NO_END
             ? $"SEQ.{entry.Start + 1}~{entry.End + 1}"
             : $"SEQ.{entry.Start + 1}";
-        wb.Sheets[entry.SheetName].Name = newName;
+        ((Excel.Worksheet)wb.Sheets[entry.SheetName]).Name = newName;
       }
 
       // Đặt tên active = tên GỐC của sheet tiếp theo (đã lưu trước khi shift)
@@ -178,7 +178,7 @@ namespace AddinsSupport.Features
         string newName = entry.End != NO_END
             ? $"SEQ{activeGroup}.{entry.Start + 1}~{entry.End + 1}"
             : $"SEQ{activeGroup}.{entry.Start + 1}";
-        wb.Sheets[entry.SheetName].Name = newName;
+        ((Excel.Worksheet)wb.Sheets[entry.SheetName]).Name = newName;
       }
 
       // Đặt tên active = tên GỐC của sheet tiếp theo (đã lưu trước khi shift)
@@ -234,9 +234,9 @@ namespace AddinsSupport.Features
 
       // Đổi qua tên tạm để tránh xung đột
       for (int i = 0; i < entries.Count; i++)
-        wb.Sheets[entries[i].SheetName].Name = $"_TMP_{i}";
+        ((Excel.Worksheet)wb.Sheets[entries[i].SheetName]).Name = $"_TMP_{i}";
       for (int i = 0; i < entries.Count; i++)
-        wb.Sheets[$"_TMP_{i}"].Name = newNames[i];
+        ((Excel.Worksheet)wb.Sheets[$"_TMP_{i}"]).Name = newNames[i];
 
       MessageBox.Show($"Hoàn thành! (Mode 0) Đã chỉnh lại {entries.Count} sheet.",
           "CheckAndFixSeqOrder", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -290,7 +290,7 @@ namespace AddinsSupport.Features
 
       // Đổi tất cả về tên tạm trước
       for (int i = 0; i < all.Count; i++)
-        wb.Sheets[all[i].SheetName].Name = $"_TMP_{i}";
+        ((Excel.Worksheet)wb.Sheets[all[i].SheetName]).Name = $"_TMP_{i}";
 
       int fixCount = 0;
       foreach (long g in groups)
@@ -318,7 +318,7 @@ namespace AddinsSupport.Features
             newName = $"SEQ{g}.{expectNum}";
             expectNum++;
           }
-          wb.Sheets[entry.SheetName].Name = newName;
+          ((Excel.Worksheet)wb.Sheets[entry.SheetName]).Name = newName;
           fixCount++;
         }
       }

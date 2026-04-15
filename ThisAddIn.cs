@@ -1,15 +1,14 @@
-using ExcelDna.Integration;
+using Office = Microsoft.Office.Core;
 
 namespace AddinsSupport
 {
     public partial class ThisAddIn
     {
         private void InternalStartup() { }
-    }
 
-    public class AddInEntryPoint : IExcelAddIn
-    {
-        public void AutoOpen() { }
-        public void AutoClose() { }
+        protected override Office.IRibbonExtensibility CreateRibbonExtensibilityObject()
+        {
+            return new MainRibbon();
+        }
     }
 }
