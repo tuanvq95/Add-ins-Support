@@ -222,9 +222,9 @@ namespace AddinsSupport
             Features.ExtensionsManager.ShowComingSoon(control?.Id);
         }
 
-        /// <summary>Trả về chuỗi phiên bản add-in, ví dụ "v1.0.0".</summary>
+        /// <summary>Trả về chuỗi phiên bản add-in, ví dụ "Phiên bản: v1.0.0".</summary>
         public string GetVersionLabel(Office.IRibbonControl control)
-            => "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            => "Phiên bản: v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
         #endregion
 

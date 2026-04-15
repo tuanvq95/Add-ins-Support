@@ -93,7 +93,9 @@ namespace AddinsSupport.Features
         protected static void AddBackLink(
             Excel.Workbook wb,
             string targetSheetName,
-            string sourceSheetName)
+            string sourceSheetName,
+            int anchorRow,
+            int anchorCol)
         {
             // "戻る" = tiếng Nhật "quay lại" — giữ nguyên theo VBA gốc
             const string BACK_TEXT = "戻る";
@@ -118,13 +120,28 @@ namespace AddinsSupport.Features
                 target.Hyperlinks.Add(
                     Anchor: a1,
                     Address: string.Empty,
-                    SubAddress: $"'{sourceSheetName}'!A1",
+                    SubAddress: $"'{sourceSheetName}'!{ColAddress(anchorCol)}{anchorRow}",
                     TextToDisplay: BACK_TEXT);
 
                 a1.Font.Color = BLUE_OLE;
                 a1.Font.Underline = Excel.XlUnderlineStyle.xlUnderlineStyleSingle;
             }
             catch { /* sheet bị bảo vệ hoặc lỗi khác, bỏ qua */ }
+        }
+
+        /// <summary>
+        /// Chuyển chỉ số cột (1-based) thành chữ cái Excel, vd: 1→"A", 27→"AA".
+        /// </summary>
+        private static string ColAddress(int col)
+        {
+            string s = string.Empty;
+            while (col > 0)
+            {
+                col--;
+                s = (char)('A' + col % 26) + s;
+                col /= 26;
+            }
+            return s;
         }
     }
 
@@ -179,7 +196,7 @@ namespace AddinsSupport.Features
                         TextToDisplay: seqNum.ToString());
 
                     ApplyCellStyle(cell);
-                    AddBackLink(wb, sheetName, ws.Name);
+                    AddBackLink(wb, sheetName, ws.Name, cell.Row, cell.Column);
                     result.Added++;
                 }
                 catch { result.Skipped++; }
@@ -333,7 +350,7 @@ namespace AddinsSupport.Features
                         TextToDisplay: autoIndex.ToString());
 
                     ApplyCellStyle(cell);
-                    AddBackLink(wb, sheetName, ws.Name);
+                    AddBackLink(wb, sheetName, ws.Name, cell.Row, cell.Column);
                     result.Added++;
                 }
                 catch { result.Skipped++; }

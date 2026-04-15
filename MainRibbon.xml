@@ -127,8 +127,11 @@
 				<group id="grpExtensions" label="Tiện Ích Mở Rộng">
 
 					<!-- Hiển thị phiên bản add-in hiện tại -->
-					<labelControl id="lblVersionCaption" label="Phiên bản:" />
-					<labelControl id="lblVersion" getLabel="GetVersionLabel" />
+					<button id="lblVersion"
+						imageMso="Help"
+						size="large"
+						enabled="false"
+						getLabel="GetVersionLabel" />
 
 				</group>
 
