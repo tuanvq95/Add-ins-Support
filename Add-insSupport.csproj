@@ -32,6 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <BootstrapperComponentsLocation>HomeSite</BootstrapperComponentsLocation>
     <ResolveComReferenceSilent>true</ResolveComReferenceSilent>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.VSTORuntime.4.0">
@@ -177,6 +178,10 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
+    <PackageReference Include="ExcelDna.Integration" Version="1.8.0" />
+  </ItemGroup>
   <!--
     This section defines the user source files that are part of the project.
 
@@ -194,7 +199,9 @@
     <Compile Include="Features\SheetEditingManager.cs" />
     <Compile Include="Features\SheetNameManager.cs" />
     <Compile Include="Features\SheetSeqRenamer.cs" />
-    <Compile Include="Forms\ColorSelectionSettingsForm.cs" />
+    <Compile Include="Forms\ColorSelectionSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -215,9 +222,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainRibbon.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".gitignore" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

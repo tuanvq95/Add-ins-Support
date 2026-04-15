@@ -19,7 +19,7 @@
 						supertip="Mở dialog cài đặt:&#13;• Chọn màu nền (ColorPicker)&#13;• Bật/tắt giới hạn cột và nhập cột từ-đến" />
 
 					<!-- Tô màu nền cho toàn dòng (hoặc dải cột theo cài đặt) -->
-				<box id="boxColorSelection" boxStyle="horizontal ">
+				<box id="boxColorSelection" boxStyle="horizontal">
 					<button id="btnColorSelection"
 						label="Tô Màu"
 						imageMso="FontColorPicker"
