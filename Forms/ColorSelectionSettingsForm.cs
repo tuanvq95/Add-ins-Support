@@ -21,6 +21,9 @@ namespace AddinsSupport.Forms
     private Label lblColor;
     private Panel pnlColorPreview;
     private Button btnPickColor;
+    private Label lblSheetNormalize;
+    private Label lblZoom;
+    private NumericUpDown nudZoom;
     private Button btnOK;
     private Button btnCancel;
 
@@ -34,12 +37,12 @@ namespace AddinsSupport.Forms
 
     private void BuildUI()
     {
-      this.Text = "Cài Đặt Tô Màu";
+      this.Text = "Cài Đặt Tô Màu & Chuẩn Hóa Sheet";
       this.FormBorderStyle = FormBorderStyle.FixedDialog;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.StartPosition = FormStartPosition.CenterScreen;
-      this.ClientSize = new Size(340, 175);
+      this.ClientSize = new Size(340, 215);
       this.Font = new Font("Segoe UI", 9f);
 
       // ── Checkbox chọn giới hạn cột ──────────────────────────────────
@@ -105,11 +108,36 @@ namespace AddinsSupport.Forms
       };
       btnPickColor.Click += BtnPickColor_Click;
 
-      // ── OK / Huỷ ────────────────────────────────────────────────────
+      // ── Chuẩn hóa Sheet ────────────────────────────────────────
+      lblSheetNormalize = new Label
+      {
+        Text = "───  Chuẩn Hóa Sheet  ───",
+        Location = new Point(12, 118),
+        AutoSize = true,
+        ForeColor = System.Drawing.SystemColors.GrayText
+      };
+
+      lblZoom = new Label
+      {
+        Text = "Zoom chuẩn hóa (%):",
+        Location = new Point(12, 148),
+        AutoSize = true,
+        TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+      };
+      nudZoom = new NumericUpDown
+      {
+        Location = new Point(148, 145),
+        Width = 75,
+        Minimum = 10,
+        Maximum = 400,
+        Value = 100
+      };
+
+      // ── OK / Huỷ ────────────────────────────────────────────
       btnOK = new Button
       {
         Text = "OK",
-        Location = new Point(148, 130),
+        Location = new Point(148, 175),
         Width = 80,
         DialogResult = DialogResult.OK
       };
@@ -118,7 +146,7 @@ namespace AddinsSupport.Forms
       btnCancel = new Button
       {
         Text = "Huỷ",
-        Location = new Point(244, 130),
+        Location = new Point(244, 175),
         Width = 80,
         DialogResult = DialogResult.Cancel
       };
@@ -132,6 +160,7 @@ namespace AddinsSupport.Forms
                 lblFrom, nudColFrom,
                 lblTo, nudColTo,
                 lblColor, pnlColorPreview, btnPickColor,
+                lblSheetNormalize, lblZoom, nudZoom,
                 btnOK, btnCancel
       });
     }
@@ -144,6 +173,7 @@ namespace AddinsSupport.Forms
       nudColFrom.Value = Clamp(ColorSelectionSettings.ColFrom, 1, 16384);
       nudColTo.Value = Clamp(ColorSelectionSettings.ColTo, 1, 16384);
       pnlColorPreview.BackColor = ColorSelectionSettings.FillColor;
+      nudZoom.Value = Clamp(ColorSelectionSettings.SheetZoomPercent, 10, 400);
       RefreshColumnControls();
     }
 
@@ -184,6 +214,7 @@ namespace AddinsSupport.Forms
       ColorSelectionSettings.ColFrom = (int)nudColFrom.Value;
       ColorSelectionSettings.ColTo = (int)nudColTo.Value;
       ColorSelectionSettings.FillColor = pnlColorPreview.BackColor;
+      ColorSelectionSettings.SheetZoomPercent = (int)nudZoom.Value;
     }
 
     // ─── Helper ──────────────────────────────────────────────────────────

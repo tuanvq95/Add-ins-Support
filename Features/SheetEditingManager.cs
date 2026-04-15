@@ -80,10 +80,17 @@ namespace AddinsSupport.Features
     /// <summary>
     /// Tạo sheet mới bằng cách sao chép sheet cuối cùng trong workbook
     /// (giữ nguyên định dạng, column width, row height, v.v.) rồi xóa nội dung.
-    /// Sheet mới được tự động đặt tên theo format "Sheet_yyyyMMdd".
+    /// <para>Tên sheet mới được tính từ tên sheet cuối theo định dạng SEQ tương ứng:</para>
+    /// <list type="bullet">
+    ///   <item>seqMode = -1 (None)  → "Sheet_yyyyMMdd"</item>
+    ///   <item>seqMode =  0 (SEQ.xxx)  → "SEQ.{N+1}" kế tiếp sheet cuối</item>
+    ///   <item>seqMode =  1 (SEQg.xxx) → "SEQ{g}.{N+1}" kế tiếp trong nhóm</item>
+    /// </list>
+    /// Nếu tên sheet cuối không khớp định dạng đã chọn, fallback về "Sheet_yyyyMMdd".
     /// </summary>
     /// <param name="wb">Workbook đang hoạt động.</param>
-    public static void AddSheetWithFormat(Excel.Workbook wb)
+    /// <param name="seqMode">-1=None, 0=SEQ.xxx, 1=SEQg.xxx.</param>
+    public static void AddSheetWithFormat(Excel.Workbook wb, int seqMode = -1)
     {
       if (wb == null) throw new ArgumentNullException("wb");
 
@@ -99,19 +106,34 @@ namespace AddinsSupport.Features
         return;
       }
 
+      // Ghi nhớ tên tất cả sheet hiện có để tìm sheet mới sau khi copy
+      var existingNames = new System.Collections.Generic.HashSet<string>(
+          StringComparer.OrdinalIgnoreCase);
+      foreach (Excel.Worksheet s in wb.Worksheets)
+        existingNames.Add(s.Name);
+
       // Copy sheet cuối → sheet mới xuất hiện sau nó
       templateSheet.Copy(After: templateSheet);
 
-      // Lấy sheet vừa được tạo (luôn là sheet cuối mới nhất)
-      Excel.Worksheet newSheet = wb.Worksheets[wb.Worksheets.Count] as Excel.Worksheet;
+      // Tìm sheet vừa được tạo bằng cách so sánh tên (tránh lệ thuộc vào index)
+      Excel.Worksheet newSheet = null;
+      foreach (Excel.Worksheet s in wb.Worksheets)
+      {
+        if (!existingNames.Contains(s.Name))
+        {
+          newSheet = s;
+          break;
+        }
+      }
       if (newSheet == null) return;
 
-      // Xóa nội dung nhưng giữ lại định dạng ô
-      newSheet.UsedRange.ClearContents();
-
-      // Đặt tên mặc định; đảm bảo không trùng với sheet đã có
-      string baseName = "Sheet_" + DateTime.Now.ToString("yyyyMMdd");
+      // Tính tên mới TRƯỚC khi xóa nội dung để tránh mọi exception làm tên sai
+      string baseName = BuildSheetName(templateSheet.Name, seqMode);
       newSheet.Name = SheetNameManager.EnsureUnique(wb, newSheet, baseName);
+
+      // Xóa nội dung nhưng giữ lại định dạng ô
+      try { newSheet.UsedRange.ClearContents(); }
+      catch { /* sheet rỗng hoặc protected — bỏ qua */ }
 
       // Kích hoạt sheet mới để người dùng thấy ngay
       newSheet.Activate();
@@ -120,6 +142,63 @@ namespace AddinsSupport.Features
           $"Đã tạo sheet mới '{newSheet.Name}'\n"
           + $"từ định dạng của sheet '{templateSheet.Name}'.",
           "Thêm Sheet Theo Format",
+          MessageBoxButtons.OK,
+          MessageBoxIcon.Information);
+    }
+
+    // ─── Tính Tên Sheet Mới Theo SEQ Format ────────────────────────────────
+
+    /// <summary>
+    /// Tính tên sheet kế tiếp dựa trên tên sheet mẫu và chế độ SEQ đang chọn.
+    /// </summary>
+    private static string BuildSheetName(string templateName, int seqMode)
+    {
+      if (seqMode == 0)
+      {
+        long s, e;
+        if (SheetSeqRenamer.ParseMode0(templateName, out s, out e))
+          return $"SEQ.{(e >= 0 ? e + 1 : s + 1)}";
+      }
+      else if (seqMode == 1)
+      {
+        long g, s, e;
+        if (SheetSeqRenamer.ParseMode1(templateName, out g, out s, out e))
+          return $"SEQ{g}.{(e >= 0 ? e + 1 : s + 1)}";
+      }
+
+      return "Sheet_" + DateTime.Now.ToString("yyyyMMdd");
+    }
+
+    // ─── Chuẩn Hóa Sheet ─────────────────────────────────────────────────
+
+    /// <summary>
+    /// Duyệt qua tất cả sheet trong workbook, đặt zoom về <see cref="ColorSelectionSettings.SheetZoomPercent"/>%
+    /// và chuyển ô focus về A1. Sau khi hoàn tất, sheet đang active trước đó được khôi phục.
+    /// </summary>
+    /// <param name="wb">Workbook đang hoạt động.</param>
+    public static void NormalizeSheets(Excel.Workbook wb)
+    {
+      if (wb == null) throw new ArgumentNullException("wb");
+
+      int zoom = ColorSelectionSettings.SheetZoomPercent;
+      Excel.Worksheet originalSheet = wb.Application.ActiveSheet as Excel.Worksheet;
+      int count = 0;
+
+      foreach (Excel.Worksheet ws in wb.Worksheets)
+      {
+        ws.Activate();
+        wb.Application.ActiveWindow.Zoom = zoom;
+        ws.Range["A1"].Select();
+        count++;
+      }
+
+      // Khôi phục sheet đang active trước đó
+      if (originalSheet != null)
+        originalSheet.Activate();
+
+      MessageBox.Show(
+          $"Đã chuẩn hóa {count} sheet: zoom {zoom}%, focus về A1.",
+          "Chuẩn Hóa Sheet",
           MessageBoxButtons.OK,
           MessageBoxIcon.Information);
     }

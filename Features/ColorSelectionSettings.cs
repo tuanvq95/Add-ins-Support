@@ -20,6 +20,9 @@ namespace AddinsSupport.Features
     /// <summary>Màu nền (System.Drawing). Mặc định: vàng nhạt #FFFFCC.</summary>
     public static Color FillColor { get; set; } = Color.FromArgb(0xFF, 0xFF, 0xCC);
 
+    /// <summary>Phần trăm zoom áp dụng khi chuẩn hóa sheet. Mặc định: 100%.</summary>
+    public static int SheetZoomPercent { get; set; } = 100;
+
     /// <summary>
     /// Chuyển <see cref="FillColor"/> sang giá trị BGR dùng cho Excel COM
     /// (<c>Interior.Color</c>).
