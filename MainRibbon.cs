@@ -82,21 +82,22 @@ namespace AddinsSupport
                 form.ShowDialog();
         }
 
-        /// <summary>Tạo sheet mới sao chép định dạng từ sheet cuối trong workbook.</summary>
+        /// <summary>Tạo sheet mới sao chép định dạng từ sheet cuối trong workbook.
+        /// Tên sheet mới dựa vào lựa chọn trên dropdown ddHyperlinkMode.</summary>
         public void OnAddSheetWithFormat(Office.IRibbonControl control)
         {
             Excel.Workbook wb = App?.ActiveWorkbook;
             if (wb == null) return;
-            Features.SheetEditingManager.AddSheetWithFormat(wb);
+            // _hyperlinkModeIndex: 0=None(→-1), 1=SEQ.xxx(→0), 2=SEQg.xxx(→1)
+            Features.SheetEditingManager.AddSheetWithFormat(wb, _hyperlinkModeIndex - 1);
         }
 
-        /// <summary>Căn chỉnh tất cả hình ảnh trong sheet hiện tại về kích thước chuẩn.</summary>
+        /// <summary>Chuẩn hóa tất cả sheet trong workbook: đặt zoom về X%, focus về A1.</summary>
         public void OnResizeImages(Office.IRibbonControl control)
         {
-            if (App?.ActiveWorkbook == null) return;
-            Excel.Worksheet ws = App.ActiveSheet as Excel.Worksheet;
-            if (ws == null) return;
-            Features.SheetEditingManager.ResizeImages(ws);
+            Excel.Workbook wb = App?.ActiveWorkbook;
+            if (wb == null) return;
+            Features.SheetEditingManager.NormalizeSheets(wb);
         }
 
         /// <summary>Bỏ ẩn tất cả sheet đang bị ẩn trong workbook.</summary>
@@ -220,6 +221,10 @@ namespace AddinsSupport
         {
             Features.ExtensionsManager.ShowComingSoon(control?.Id);
         }
+
+        /// <summary>Trả về chuỗi phiên bản add-in, ví dụ "v1.0.0".</summary>
+        public string GetVersionLabel(Office.IRibbonControl control)
+            => "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
         #endregion
 

@@ -9,14 +9,14 @@
 				     ══════════════════════════════════════════════════ -->
 				<group id="grpSheetEditing" label="Chỉnh Sửa Sheet">
 
-					<!-- Mở dialog cài đặt: chọn màu nền, giới hạn cột xx-yy -->
+					<!-- Mở dialog cài đặt: chọn màu nền, giới hạn cột xx-yy, zoom chuẩn hóa sheet -->
 					<button id="btnColorSettings"
 						label="Cài Đặt"
 						imageMso="PropertySheet"
 						size="large"
 						onAction="OnColorSettings"
-						screentip="Cài Đặt Tô Màu"
-						supertip="Mở dialog cài đặt:&#13;• Chọn màu nền (ColorPicker)&#13;• Bật/tắt giới hạn cột và nhập cột từ-đến" />
+						screentip="Cài Đặt Tô Màu &amp; Chuẩn Hóa Sheet"
+						supertip="Mở dialog cài đặt:&#13;• Chọn màu nền (ColorPicker)&#13;• Bật/tắt giới hạn cột và nhập cột từ-đến&#13;• Phần trăm zoom khi chuẩn hóa sheet (mặc định 100%)" />
 
 					<!-- Tô màu nền cho toàn dòng (hoặc dải cột theo cài đặt) -->
 				<box id="boxColorSelection" boxStyle="horizontal">
@@ -38,14 +38,14 @@
 						screentip="Thêm Sheet Theo Định Dạng Mẫu"
 						supertip="Tạo một sheet mới có định dạng và cấu trúc giống hệt sheet cuối cùng trong workbook. Nội dung sẽ được xóa, chỉ giữ định dạng." />
 
-					<!-- Căn chỉnh kích thước tất cả hình ảnh về size chuẩn -->
+					<!-- Đặt tất cả sheet về zoom chuẩn và focus A1 -->
 					<button id="btnResizeImages"
-						label="Chuẩn Hóa Ảnh"
-						imageMso="PictureInsertFromFile"
+						label="Chuẩn Hóa Sheet"
+						imageMso="ZoomDialog"
 						size="normal"
 						onAction="OnResizeImages"
-						screentip="Điều Chỉnh Kích Thước Hình Ảnh Về Size Chuẩn"
-						supertip="Tự động căn chỉnh tất cả hình ảnh trong sheet hiện tại về kích thước chuẩn (120×80 px). Có thể tùy chỉnh trong code." />
+						screentip="Chuẩn Hóa Tất Cả Sheet Trong Workbook"
+						supertip="Duyệt qua tất cả sheet trong workbook:&#13;• Đặt zoom về mức đã cài đặt (mặc định 100%)&#13;• Chuyển ô focus về A1&#13;Mức zoom có thể thay đổi trong nút Cài Đặt." />
 
 					<!-- Bỏ ẩn tất cả sheet đang bị ẩn -->
 					<button id="btnUnhideAllSheets"
@@ -121,35 +121,16 @@
 				<!-- ══════════════════════════════════════════════════
 				     NHÓM 3 — TIỆN ÍCH MỞ RỘNG (Đang Phát Triển)
 				     ══════════════════════════════════════════════════ -->
-				<!--<group id="grpExtensions" label="Tiện Ích Mở Rộng">
+				<!-- ══════════════════════════════════════════════════
+				     NHÓM 3 — TIỆN ÍCH MỞ RỘNG
+				     ══════════════════════════════════════════════════ -->
+				<group id="grpExtensions" label="Tiện Ích Mở Rộng">
 
-					<button id="btnExtension1"
-						label="Tính Năng A"
-						imageMso="MacroPlay"
-						size="large"
-						onAction="OnExtensionComingSoon"
-						screentip="Đang Phát Triển"
-						supertip="Tính năng này đang được xây dựng. Vui lòng chờ phiên bản cập nhật tiếp theo." />
+					<!-- Hiển thị phiên bản add-in hiện tại -->
+					<labelControl id="lblVersionCaption" label="Phiên bản:" />
+					<labelControl id="lblVersion" getLabel="GetVersionLabel" />
 
-					<separator id="sepExt" />
-
-					<button id="btnExtension2"
-						label="Tính Năng B"
-						imageMso="MacroRecord"
-						size="normal"
-						onAction="OnExtensionComingSoon"
-						screentip="Đang Phát Triển"
-						supertip="Tính năng này đang được xây dựng. Vui lòng chờ phiên bản cập nhật tiếp theo." />
-
-					<button id="btnExtension3"
-						label="Tính Năng C"
-						imageMso="MacroStop"
-						size="normal"
-						onAction="OnExtensionComingSoon"
-						screentip="Đang Phát Triển"
-						supertip="Tính năng này đang được xây dựng. Vui lòng chờ phiên bản cập nhật tiếp theo." />
-
-				</group>-->
+				</group>
 
 			</tab>
 		</tabs>
