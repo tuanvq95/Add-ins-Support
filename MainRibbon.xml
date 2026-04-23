@@ -22,7 +22,7 @@
 				<box id="boxColorSelection" boxStyle="horizontal">
 					<button id="btnColorSelection"
 						label="Tô Màu"
-						imageMso="FontColorPicker"
+						imageMso="ControlLineColorPicker"
 						size="large"
 						onAction="OnColorSelection"
 						screentip="Tô Màu Nền Theo Dòng"
@@ -40,17 +40,17 @@
 
 					<!-- Đặt tất cả sheet về zoom chuẩn và focus A1 -->
 					<button id="btnResizeImages"
-						label="Chuẩn Hóa Sheet"
-						imageMso="ZoomDialog"
+						label="Điều chỉnh Sheets"
+						imageMso="RefreshAll"
 						size="normal"
 						onAction="OnResizeImages"
-						screentip="Chuẩn Hóa Tất Cả Sheet Trong Workbook"
+						screentip="Điều Chỉnh Tất Cả Sheet Trong Workbook"
 						supertip="Duyệt qua tất cả sheet trong workbook:&#13;• Đặt zoom về mức đã cài đặt (mặc định 100%)&#13;• Chuyển ô focus về A1&#13;Mức zoom có thể thay đổi trong nút Cài Đặt." />
 
 					<!-- Bỏ ẩn tất cả sheet đang bị ẩn -->
 					<button id="btnUnhideAllSheets"
-						label="Unhide Tất Cả"
-						imageMso="SheetInsert"
+						label="Unhide All Sheets"
+						imageMso="PrintPreviewShrinkOnePage"
 						size="normal"
 						onAction="OnUnhideAllSheets"
 						screentip="Hiển Thị Lại Tất Cả Sheet Ẩn"
@@ -61,7 +61,7 @@
 				<!-- ══════════════════════════════════════════════════
 				     NHÓM 2 — TỰ ĐỘNG THỰC THI
 				     ══════════════════════════════════════════════════ -->
-				<group id="grpAutomation" label="Tự Động Thực Thi">
+				<group id="grpAutomation" label="Xử Lý Tự Động">
 
 					<!--
 					    Dropdown chọn chế độ nhận diện Sheet ID.
@@ -69,7 +69,7 @@
 					      • Thêm định dạng mới trong C# → dropdown tự cập nhật, không cần sửa XML.
 					-->
 					<labelControl id="lblSheetNameFormat"
-						label="Sheet Name Format" />
+						label="Định dạng Sheet ID" />
 					<dropDown id="ddHyperlinkMode"
 						showLabel="false"
 						screentip="Chọn Chế Độ Tạo Hyperlink"
@@ -79,6 +79,14 @@
 						getItemID="GetHyperlinkModeID"
 						onAction="OnHyperlinkModeChanged"
 						getSelectedItemIndex="GetHyperlinkModeIndex" />
+
+					<!-- Nhập thủ công format — ưu tiên hơn dropdown nếu có nội dung -->
+					<editBox id="tbCustomFormat"
+						label="Format:"
+						screentip="Ghi Đè Định Dạng Sheet ID"
+						supertip="Nhập tên định dạng (vd: SEQ.xxx, SEQg.xxx) để ghi đè dropdown.&#13;Bỏ trống → dùng chế độ đã chọn ở dropdown."
+						onChange="OnCustomFormatChanged"
+						sizeString="XXXXXXXXXXXXXXXXXX" />
 
 					<!-- Quét URL và tạo hyperlink tự động -->
 					<button id="btnAutoHyperlink"
@@ -92,7 +100,7 @@
 					<!-- Shift tên SEQ từ vị trí active lên +1 -->
 					<button id="btnRenameByFormat"
 						label="Đổi Tên Sheet"
-						imageMso="FileSaveAs"
+						imageMso="WordArtEditTextClassic"
 						size="normal"
 						onAction="OnRenameByFormat"
 						screentip="Shift Tên Sheet SEQ Lên +1"
@@ -101,7 +109,7 @@
 					<!-- Kiểm tra và chỉnh lại thứ tự SEQ theo vị trí tab -->
 					<button id="btnCheckFixSeqOrder"
 						label="Kiểm Tra Tên Sheet"
-						imageMso="ReviewSyncScrolling"
+						imageMso="SourceControlUndoCheckOut"
 						size="normal"
 						onAction="OnCheckFixSeqOrder"
 						screentip="Kiểm Tra &amp; Chỉnh Thứ Tự SEQ"
@@ -119,16 +127,13 @@
 				</group>
 
 				<!-- ══════════════════════════════════════════════════
-				     NHÓM 3 — TIỆN ÍCH MỞ RỘNG (Đang Phát Triển)
-				     ══════════════════════════════════════════════════ -->
-				<!-- ══════════════════════════════════════════════════
 				     NHÓM 3 — TIỆN ÍCH MỞ RỘNG
 				     ══════════════════════════════════════════════════ -->
-				<group id="grpExtensions" label="Tiện Ích Mở Rộng">
+				<group id="grpExtensions" label="Hỗ trợ">
 
 					<!-- Hiển thị phiên bản add-in hiện tại -->
 					<button id="lblVersion"
-						imageMso="Help"
+						imageMso="Info"
 						size="large"
 						enabled="false"
 						getLabel="GetVersionLabel" />

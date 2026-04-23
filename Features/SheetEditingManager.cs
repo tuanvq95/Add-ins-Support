@@ -58,20 +58,32 @@ namespace AddinsSupport.Features
       int colFrom = ColorSelectionSettings.ColFrom;
       int colTo = ColorSelectionSettings.ColTo;
 
-      // Xác định dải dòng từ vùng chọn (không lặp từng ô — nhanh hơn)
-      int firstRow = selection.Row;
-      int lastRow = firstRow + selection.Rows.Count - 1;
+      // Dùng HashSet để tránh tô lại cùng một dòng khi nhiều cell rời rạc
+      // nằm trên cùng dòng (vd: chọn A1 và C1 riêng lẻ → chỉ tô dòng 1 một lần).
+      var coloredRows = new System.Collections.Generic.HashSet<int>();
 
-      for (int rowNum = firstRow; rowNum <= lastRow; rowNum++)
+      // selection.Areas hỗ trợ cả 3 case:
+      //   • 1 cell      → 1 Area, 1 dòng
+      //   • Vùng liên tục → 1 Area, nhiều dòng
+      //   • Cell rời rạc  → nhiều Area, mỗi Area 1 hoặc nhiều dòng
+      foreach (Excel.Range area in selection.Areas)
       {
-        Excel.Range target;
-        if (limitCols)
-          target = ws.Range[ws.Cells[rowNum, colFrom], ws.Cells[rowNum, colTo]] as Excel.Range;
-        else
-          target = ws.Rows[rowNum] as Excel.Range;
+        int firstRow = area.Row;
+        int lastRow = firstRow + area.Rows.Count - 1;
 
-        if (target != null)
-          target.Interior.Color = colorBgr;
+        for (int rowNum = firstRow; rowNum <= lastRow; rowNum++)
+        {
+          if (!coloredRows.Add(rowNum)) continue; // đã tô dòng này rồi
+
+          Excel.Range target;
+          if (limitCols)
+            target = ws.Range[ws.Cells[rowNum, colFrom], ws.Cells[rowNum, colTo]] as Excel.Range;
+          else
+            target = ws.Rows[rowNum] as Excel.Range;
+
+          if (target != null)
+            target.Interior.Color = colorBgr;
+        }
       }
     }
 
