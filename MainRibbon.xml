@@ -97,6 +97,15 @@
 						screentip="Tự Động Thêm Hyperlink"
 						supertip="Quét toàn bộ sheet hiện tại, phát hiện URL và chuyển thành hyperlink có thể click." />
 
+					<!-- Xóa hyperlink vùng chọn + back-link 戻る ở A1 sheet đích -->
+					<button id="btnRemoveHyperlinks"
+						label="Xóa Hyperlink"
+						imageMso="HyperlinkRemove"
+						size="normal"
+						onAction="OnRemoveHyperlinks"
+						screentip="Xóa Hyperlink &amp; Back-link"
+						supertip="Với mỗi ô có hyperlink trong vùng đang chọn:&#13;• Xóa hyperlink tại ô đó.&#13;• Xóa back-link 戻る tại A1 của sheet đích." />
+
 					<!-- Shift tên SEQ từ vị trí active lên +1 -->
 					<button id="btnRenameByFormat"
 						label="Đổi Tên Sheet"

@@ -494,6 +494,123 @@ namespace AddinsSupport.Features
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
+
+        // ── Xóa Hyperlink + Back-link ─────────────────────────────────────────
+
+        /// <summary>
+        /// Với mỗi ô trong vùng đang chọn có hyperlink nội bộ (SubAddress):
+        ///   1. Xóa hyperlink tại ô đó, khôi phục nội dung gốc.
+        ///   2. Tìm sheet đích từ SubAddress → xóa back-link 戻る tại A1.
+        /// Hỗ trợ cả selection liên tục và nhiều vùng rời rạc (Ctrl+Click).
+        /// </summary>
+        public static void RemoveHyperlinks(Excel.Worksheet ws)
+        {
+            if (ws == null) throw new ArgumentNullException("ws");
+
+            Excel.Workbook wb = ws.Parent as Excel.Workbook;
+            if (wb == null) return;
+
+            Excel.Range selection = ws.Application.Selection as Excel.Range;
+            if (selection == null)
+            {
+                MessageBox.Show(
+                    "Vui lòng chọn vùng ô cần xóa hyperlink trước khi thực hiện.",
+                    "Xóa Hyperlink",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            int removed = 0;
+            int backRemoved = 0;
+
+            foreach (Excel.Range area in selection.Areas)
+            {
+                foreach (Excel.Range cell in area.Cells)
+                {
+                    if (cell.Hyperlinks.Count == 0) continue;
+
+                    foreach (Excel.Hyperlink hl in cell.Hyperlinks)
+                    {
+                        // Chỉ xử lý hyperlink nội bộ (Address rỗng, có SubAddress)
+                        string sub = hl.SubAddress;
+                        if (!string.IsNullOrEmpty(sub))
+                        {
+                            // Parse tên sheet đích từ SubAddress: 'SheetName'!CellAddr
+                            string targetSheetName = ParseSheetFromSubAddress(sub);
+                            if (!string.IsNullOrEmpty(targetSheetName))
+                                backRemoved += RemoveBackLinkAt(wb, targetSheetName);
+                        }
+                    }
+
+                    // Lưu lại giá trị trước khi xóa để khôi phục nội dung
+                    object savedValue = cell.Value2;
+                    cell.Hyperlinks.Delete();
+                    // Hyperlinks.Delete() có thể xóa nội dung ô — khôi phục lại
+                    if (savedValue != null && (cell.Value2 == null
+                        || cell.Value2.ToString() != savedValue.ToString()))
+                        cell.Value = savedValue;
+
+                    removed++;
+                }
+            }
+
+            string msg = removed > 0
+                ? $"Đã xóa {removed} hyperlink trong vùng chọn."
+                    + (backRemoved > 0 ? $"\nĐã xóa {backRemoved} back-link 戻る ở sheet đích." : string.Empty)
+                : "Không tìm thấy hyperlink nào trong vùng chọn.";
+
+            MessageBox.Show(msg, "Xóa Hyperlink",
+                MessageBoxButtons.OK,
+                removed > 0 ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
+        }
+
+        /// <summary>
+        /// Parse tên sheet từ SubAddress dạng <c>'SheetName'!CellAddr</c>
+        /// hoặc <c>SheetName!CellAddr</c>.
+        /// </summary>
+        private static string ParseSheetFromSubAddress(string sub)
+        {
+            if (string.IsNullOrEmpty(sub)) return null;
+            int bang = sub.LastIndexOf('!');
+            if (bang <= 0) return null;
+            return sub.Substring(0, bang).Trim('\'', ' ');
+        }
+
+        /// <summary>
+        /// Xóa back-link 戻る tại ô A1 của sheet <paramref name="sheetName"/>
+        /// trong <paramref name="wb"/>. Trả về 1 nếu đã xóa, 0 nếu không tìm thấy.
+        /// </summary>
+        private static int RemoveBackLinkAt(Excel.Workbook wb, string sheetName)
+        {
+            const string BACK_TEXT = "戻る";
+            try
+            {
+                foreach (Excel.Worksheet sh in wb.Worksheets)
+                {
+                    if (!string.Equals(sh.Name, sheetName, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    Excel.Range a1 = sh.Cells[1, 1] as Excel.Range;
+                    if (a1 == null) return 0;
+
+                    bool found = false;
+                    foreach (Excel.Hyperlink hl in a1.Hyperlinks)
+                    {
+                        if (string.Equals(hl.TextToDisplay, BACK_TEXT, StringComparison.Ordinal))
+                        { found = true; break; }
+                    }
+
+                    if (!found) return 0;
+
+                    a1.Hyperlinks.Delete();
+                    a1.ClearContents();
+                    return 1;
+                }
+            }
+            catch { /* sheet bảo vệ hoặc lỗi khác — bỏ qua */ }
+            return 0;
+        }
     }
 }
 

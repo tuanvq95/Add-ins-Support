@@ -168,6 +168,18 @@ namespace AddinsSupport
         }
 
         /// <summary>
+        /// Xóa hyperlink tại từng ô trong vùng chọn và đồng thời xóa
+        /// back-link 戻る tại A1 của sheet đích mà hyperlink đó trỏ đến.
+        /// </summary>
+        public void OnRemoveHyperlinks(Office.IRibbonControl control)
+        {
+            if (App?.ActiveWorkbook == null) return;
+            Excel.Worksheet ws = App.ActiveSheet as Excel.Worksheet;
+            if (ws == null) return;
+            Features.HyperlinkManager.RemoveHyperlinks(ws);
+        }
+
+        /// <summary>
         /// Shift tên sheet SEQ từ vị trí active trở đi lên +1.
         /// Chế độ được lấy từ dropdown ddHyperlinkMode:
         ///   index 1 (SEQ.xxx)  → Mode 0 (toàn workbook)
