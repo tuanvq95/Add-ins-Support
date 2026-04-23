@@ -87,6 +87,26 @@ namespace AddinsSupport.Features
         }
 
         /// <summary>
+        /// Khôi phục format ô về trạng thái bình thường sau khi xóa hyperlink:
+        /// bỏ màu xanh, bỏ gạch chân, giữ nguyên viền và căn giữa (đối xứng với ApplyCellStyle).
+        /// </summary>
+        internal static void RestoreCellStyle(Excel.Range cell)
+        {
+            // Xóa màu font và gạch chân do hyperlink để lại
+            cell.Font.ColorIndex = Excel.Constants.xlAutomatic;
+            cell.Font.Underline = Excel.XlUnderlineStyle.xlUnderlineStyleNone;
+
+            // Giữ lại viền 4 cạnh và căn giữa như ApplyCellStyle đã áp
+            var b = cell.Borders;
+            b[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
+            b[Excel.XlBordersIndex.xlEdgeRight].LineStyle = Excel.XlLineStyle.xlContinuous;
+            b[Excel.XlBordersIndex.xlEdgeTop].LineStyle = Excel.XlLineStyle.xlContinuous;
+            b[Excel.XlBordersIndex.xlEdgeBottom].LineStyle = Excel.XlLineStyle.xlContinuous;
+            cell.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            cell.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+        }
+
+        /// <summary>
         /// Thêm hyperlink "戻る" vào ô A1 của sheet đích, trỏ ngược về
         /// ô A1 của sheet nguồn (giữ nguyên hành vi VBA gốc).
         /// </summary>
@@ -550,6 +570,9 @@ namespace AddinsSupport.Features
                     if (savedValue != null && (cell.Value2 == null
                         || cell.Value2.ToString() != savedValue.ToString()))
                         cell.Value = savedValue;
+
+                    // Khôi phục format: bỏ màu xanh/gạch chân, giữ viền + căn giữa
+                    SheetIdFormat.RestoreCellStyle(cell);
 
                     removed++;
                 }

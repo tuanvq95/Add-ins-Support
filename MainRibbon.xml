@@ -82,11 +82,11 @@
 
 					<!-- Nhập thủ công format — ưu tiên hơn dropdown nếu có nội dung -->
 					<editBox id="tbCustomFormat"
-						label="Format:"
+						showLabel="false"
 						screentip="Ghi Đè Định Dạng Sheet ID"
 						supertip="Nhập tên định dạng (vd: SEQ.xxx, SEQg.xxx) để ghi đè dropdown.&#13;Bỏ trống → dùng chế độ đã chọn ở dropdown."
 						onChange="OnCustomFormatChanged"
-						sizeString="XXXXXXXXXXXXXXXXXX" />
+						sizeString="XXXXXXXXXXXXX" />
 
 					<!-- Quét URL và tạo hyperlink tự động -->
 					<button id="btnAutoHyperlink"
