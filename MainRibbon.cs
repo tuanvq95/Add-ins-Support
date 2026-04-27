@@ -60,14 +60,13 @@ namespace AddinsSupport
         }
 
         /// <summary>Tạo sheet mới sao chép định dạng từ sheet cuối trong workbook.
-        /// Tên sheet mới dựa vào lựa chọn trên dropdown ddHyperlinkMode hoặc text ghi đè.</summary>
+        /// Tên sheet mới dựa vào lựa chọn trên dropdown ddHyperlinkMode.</summary>
         public void OnAddSheetWithFormat(Office.IRibbonControl control)
         {
             Excel.Workbook wb = App?.ActiveWorkbook;
             if (wb == null) return;
-            int idx = ResolveFormatIndex();
-            if (idx == -2) idx = -1; // text không khớp → treat as None
-            Features.SheetEditingManager.AddSheetWithFormat(wb, idx);
+            // _hyperlinkModeIndex: 0=None(→-1), 1=SEQ.xxx(→0), 2=SEQg.xxx(→1)
+            Features.SheetEditingManager.AddSheetWithFormat(wb, _hyperlinkModeIndex - 1);
         }
 
         /// <summary>Chuẩn hóa tất cả sheet trong workbook: đặt zoom về X%, focus về A1.</summary>
@@ -112,30 +111,6 @@ namespace AddinsSupport
         public void OnHyperlinkModeChanged(Office.IRibbonControl control, string selectedId, int selectedIndex)
             => _hyperlinkModeIndex = selectedIndex;
 
-        /// <summary>Lưu nội dung ô text ghi đè format.</summary>
-        public void OnCustomFormatChanged(Office.IRibbonControl control, string text)
-            => _customFormatText = text ?? string.Empty;
-
-        /// <summary>
-        /// Giải quyết index định dạng hiệu lực (0-based trong IdFormats):<br/>
-        /// • Nếu <see cref="_customFormatText"/> có nội dung → tìm theo tên (ưu tiên).<br/>
-        /// • Ngược lại → dùng <see cref="_hyperlinkModeIndex"/> - 1.<br/>
-        /// Trả về -1 nếu None, -2 nếu text nhập không khớp format nào.
-        /// </summary>
-        private int ResolveFormatIndex()
-        {
-            if (!string.IsNullOrWhiteSpace(_customFormatText))
-            {
-                var formats = Features.HyperlinkManager.IdFormats;
-                string key = _customFormatText.Trim();
-                for (int i = 0; i < formats.Count; i++)
-                    if (string.Equals(formats[i].Name, key, StringComparison.OrdinalIgnoreCase))
-                        return i;
-                return -2; // text không khớp format nào
-            }
-            return _hyperlinkModeIndex - 1;
-        }
-
         // ── Nút thực thi ────────────────────────────────────────────────────
 
         /// <summary>Quét toàn bộ sheet hiện tại và tự động thêm hyperlink theo chế độ đã chọn.</summary>
@@ -144,27 +119,16 @@ namespace AddinsSupport
             if (App?.ActiveWorkbook == null) return;
             Excel.Worksheet ws = App.ActiveSheet as Excel.Worksheet;
             if (ws == null) return;
-            int idx = ResolveFormatIndex();
-            if (idx == -2)
+            if (_hyperlinkModeIndex == 0)
             {
                 System.Windows.Forms.MessageBox.Show(
-                    $"Định dạng '{_customFormatText.Trim()}' không khớp với bất kỳ định dạng nào.\n"
-                    + "Vui lòng kiểm tra lại hoặc xóa text để dùng dropdown.",
+                    "Vui lòng chọn định dạng Sheet ID trên dropdown 'Sheet Name Format' trước khi thực hiện.",
                     "AutoHyperlink",
                     System.Windows.Forms.MessageBoxButtons.OK,
                     System.Windows.Forms.MessageBoxIcon.Warning);
                 return;
             }
-            if (idx < 0)
-            {
-                System.Windows.Forms.MessageBox.Show(
-                    "Vui lòng chọn định dạng Sheet ID trên dropdown hoặc nhập vào ô Format.",
-                    "AutoHyperlink",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Warning);
-                return;
-            }
-            Features.HyperlinkManager.AutoAddHyperlinks(ws, idx);
+            Features.HyperlinkManager.AutoAddHyperlinks(ws, _hyperlinkModeIndex - 1);
         }
 
         /// <summary>
@@ -190,21 +154,13 @@ namespace AddinsSupport
             Excel.Workbook wb = App?.ActiveWorkbook;
             if (wb == null) return;
 
-            int seqMode = ResolveFormatIndex();
-            if (seqMode == -2)
-            {
-                System.Windows.Forms.MessageBox.Show(
-                    $"Định dạng '{_customFormatText.Trim()}' không khớp với bất kỳ định dạng nào.\n"
-                    + "Vui lòng kiểm tra lại hoặc xóa text để dùng dropdown.",
-                    "AutoRenameSeqSheets",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Warning);
-                return;
-            }
+            // ddHyperlinkMode index: 0=None, 1=SEQ.xxx, 2=SEQg.xxx
+            // Map sang VBA HYPERLINK_MODE: 1→0, 2→1
+            int seqMode = _hyperlinkModeIndex - 1;
             if (seqMode < 0 || seqMode > 1)
             {
                 System.Windows.Forms.MessageBox.Show(
-                    "Vui lòng chọn chế độ SEQ.xxx hoặc SEQg.xxx trên dropdown 'Định dạng Sheet ID' trước khi thực hiện.",
+                    "Vui lòng chọn chế độ SEQ.xxx hoặc SEQg.xxx trên dropdown 'Sheet Name Format' trước khi thực hiện.",
                     "AutoRenameSeqSheets",
                     System.Windows.Forms.MessageBoxButtons.OK,
                     System.Windows.Forms.MessageBoxIcon.Warning);
@@ -223,21 +179,11 @@ namespace AddinsSupport
             Excel.Workbook wb = App?.ActiveWorkbook;
             if (wb == null) return;
 
-            int seqMode = ResolveFormatIndex();
-            if (seqMode == -2)
-            {
-                System.Windows.Forms.MessageBox.Show(
-                    $"Định dạng '{_customFormatText.Trim()}' không khớp với bất kỳ định dạng nào.\n"
-                    + "Vui lòng kiểm tra lại hoặc xóa text để dùng dropdown.",
-                    "CheckAndFixSeqOrder",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Warning);
-                return;
-            }
+            int seqMode = _hyperlinkModeIndex - 1;
             if (seqMode < 0 || seqMode > 1)
             {
                 System.Windows.Forms.MessageBox.Show(
-                    "Vui lòng chọn chế độ SEQ.xxx hoặc SEQg.xxx trên dropdown 'Định dạng Sheet ID' trước khi thực hiện.",
+                    "Vui lòng chọn chế độ SEQ.xxx hoặc SEQg.xxx trên dropdown 'Sheet Name Format' trước khi thực hiện.",
                     "CheckAndFixSeqOrder",
                     System.Windows.Forms.MessageBoxButtons.OK,
                     System.Windows.Forms.MessageBoxIcon.Warning);

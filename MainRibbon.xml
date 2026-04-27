@@ -80,14 +80,6 @@
 						onAction="OnHyperlinkModeChanged"
 						getSelectedItemIndex="GetHyperlinkModeIndex" />
 
-					<!-- Nhập thủ công format — ưu tiên hơn dropdown nếu có nội dung -->
-					<editBox id="tbCustomFormat"
-						showLabel="false"
-						screentip="Ghi Đè Định Dạng Sheet ID"
-						supertip="Nhập tên định dạng (vd: SEQ.xxx, SEQg.xxx) để ghi đè dropdown.&#13;Bỏ trống → dùng chế độ đã chọn ở dropdown."
-						onChange="OnCustomFormatChanged"
-						sizeString="XXXXXXXXXXXXX" />
-
 					<!-- Quét URL và tạo hyperlink tự động -->
 					<button id="btnAutoHyperlink"
 						label="Tạo Hyperlink"
@@ -123,15 +115,6 @@
 						onAction="OnCheckFixSeqOrder"
 						screentip="Kiểm Tra &amp; Chỉnh Thứ Tự SEQ"
 						supertip="Kiểm tra thứ tự đánh số SEQ theo vị trí tab. Nếu lệch → hỏi xác nhận rồi chỉnh lại tự động (bảo toàn độ rộng range).&#13;Chế độ lấy từ dropdown Sheet ID Format." />
-
-					<!-- Sắp xếp sheet theo alphabet và chuẩn hóa tên -->
-					<!--<button id="btnSortNormalizeSheets"
-						label="Sắp Xếp &amp; Chuẩn Hóa"
-						imageMso="SortAscendingAZ"
-						size="normal"
-						onAction="OnSortNormalizeSheets"
-						screentip="Sắp Xếp và Chuẩn Hóa Tên Sheet"
-						supertip="Tự động sắp xếp các sheet theo thứ tự bảng chữ cái (A→Z) và loại bỏ khoảng trắng thừa ở đầu/cuối tên sheet." />-->
 
 				</group>
 

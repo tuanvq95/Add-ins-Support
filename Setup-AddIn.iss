@@ -1,7 +1,7 @@
 [Setup]
 AppName=Add-insSupport
 AppId={{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
-AppVersion=1.0.2
+AppVersion=1.0.3
 AppPublisher=ToolSupport
 DefaultDirName={autopf}\Add-insSupport
 DefaultGroupName=Add-insSupport
