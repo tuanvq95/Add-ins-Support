@@ -193,12 +193,14 @@ namespace AddinsSupport.Features
             Excel.Workbook wb = ws.Parent as Excel.Workbook;
             if (wb == null) return result;
 
+
             foreach (Excel.Range cell in range.Cells)
             {
                 object raw = cell.Value2;
                 if (raw == null) { result.Skipped++; continue; }
 
-                if (!TryParseLong(raw.ToString().Trim(), out long seqNum))
+                string rawStr = raw.ToString().Trim();
+                if (!TryParseLong(rawStr, out long seqNum))
                 { result.Skipped++; continue; }
 
                 string sheetName = FindSheet(wb, seqNum);
@@ -209,11 +211,14 @@ namespace AddinsSupport.Features
                     // Xóa hyperlink cũ nếu có
                     if (cell.Hyperlinks.Count > 0) cell.Hyperlinks.Delete();
 
+                    // Giữ nguyên giá trị gốc của ô
+                    cell.Value = rawStr;
+
                     ws.Hyperlinks.Add(
                         Anchor: cell,
                         Address: string.Empty,
                         SubAddress: $"'{sheetName}'!A1",
-                        TextToDisplay: seqNum.ToString());
+                        TextToDisplay: rawStr);
 
                     ApplyCellStyle(cell);
                     AddBackLink(wb, sheetName, ws.Name, cell.Row, cell.Column);
@@ -310,22 +315,21 @@ namespace AddinsSupport.Features
             Excel.Workbook wb = ws.Parent as Excel.Workbook;
             if (wb == null) return result;
 
+
             long lastRefSeqNum = -1; // -1 = chưa xác định được nhóm nào
-            int autoIndex = 0;
 
             foreach (Excel.Range cell in range.Cells)
             {
                 object raw = cell.Value2;
                 if (raw == null) { result.Skipped++; continue; }
 
-                if (!TryParseLong(raw.ToString().Trim(), out long cellSeqNum))
+                string rawStr = raw.ToString().Trim();
+                if (!TryParseLong(rawStr, out long cellSeqNum))
                 { result.Skipped++; continue; }
 
                 // Khi bắt đầu nhóm mới (STT con = 1): cập nhật số nhóm
                 if (cellSeqNum == 1)
                 {
-                    autoIndex = 0;
-
                     // Đọc số nhóm từ cột RefColumn cùng hàng
                     Excel.Range refCell = ws.Cells[cell.Row, RefColumn] as Excel.Range;
                     string refRaw = refCell?.Value2?.ToString()?.Trim() ?? string.Empty;
@@ -359,15 +363,14 @@ namespace AddinsSupport.Features
                 {
                     if (cell.Hyperlinks.Count > 0) cell.Hyperlinks.Delete();
 
-                    // Đánh lại STT con bắt đầu từ 1 trong mỗi nhóm (ghi đè giá trị ô)
-                    autoIndex++;
-                    cell.Value = autoIndex;
+                    // Giữ nguyên giá trị gốc của ô
+                    cell.Value = rawStr;
 
                     ws.Hyperlinks.Add(
                         Anchor: cell,
                         Address: string.Empty,
                         SubAddress: $"'{sheetName}'!A1",
-                        TextToDisplay: autoIndex.ToString());
+                        TextToDisplay: rawStr);
 
                     ApplyCellStyle(cell);
                     AddBackLink(wb, sheetName, ws.Name, cell.Row, cell.Column);
